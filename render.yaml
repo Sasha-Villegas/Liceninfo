@@ -1,26 +1,24 @@
 # ============================================
 # render.yaml - Deploy en Render.com
 # ============================================
-# Este archivo configura el deploy automático
-# del backend FastAPI que también sirve el frontend.
 
 services:
   - type: web
     name: liceninfo
     runtime: python
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    # Sin rootDir para que tanto frontend/ como backend/ estén disponibles
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: SMTP_HOST
         value: smtp.gmail.com
       - key: SMTP_PORT
         value: "587"
       - key: SMTP_USER
-        sync: false  # Lo configurás manualmente en Render
+        sync: false
       - key: SMTP_PASS
-        sync: false  # Lo configurás manualmente en Render
+        sync: false
       - key: GEMINI_API_KEY
-        sync: false  # Lo configurás manualmente en Render
+        sync: false
     plan: free
     healthCheckPath: /api/health
